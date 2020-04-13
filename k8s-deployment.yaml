@@ -18,21 +18,23 @@ spec:
       - name: chat-server
         image: incplusplus/spring-boot-websocket-chat-demo:0.0.1-SNAPSHOT
         imagePullPolicy: IfNotPresent
-        ports:
-          - name: http
-            containerPort: 8080 # The port that the container exposes
 ---
-apiVersion: v1                # API version
-kind: Service                 # Type of the kubernetes resource
-metadata:                     
-  name: chat-server           # Name of the kubernetes resource
-  labels:                     # Labels that will be applied to this resource
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
     app: chat-server
-spec:                         
-  type: LoadBalancer              # The service will be exposed by opening a Port on each node and proxying it.
+  name: chat-server
+spec:
+  ports:
+    - name: http
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
   selector:
-    app: chat-server          # The service exposes Pods with label `app=polling-app-server`
-  ports:                      # Forward incoming connections on port 8080 to the target port 8080
-  - name: http
-    port: 8080
-    targetPort: 8080
+    app: chat-server
+  type: LoadBalancer
+status:
+  loadBalancer: {}
+---
