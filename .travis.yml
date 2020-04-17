@@ -3,6 +3,7 @@ sudo: true
 os: linux
 dist: xenial
 language: java
+install: true
 
 cache:
   directories:
