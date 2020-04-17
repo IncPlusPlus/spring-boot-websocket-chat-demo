@@ -6,6 +6,12 @@ language: java
 branches:
   only:
     - travis-tomfoolery
+
+cache:
+  directories:
+    - $HOME/.m2/repository
+    - docker_cached
+
 # install qemu-user before running docker build
 before_install:
   - export DOCKER_CLI_EXPERIMENTAL=enabled
@@ -28,6 +34,5 @@ deploy:
   on:
     branch: travis-tomfoolery
 
-# Don't email me the results of the test runs.
 notifications:
   email: false
