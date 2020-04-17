@@ -3,27 +3,23 @@ sudo: true
 dist: xenial
 language: java
 
-services:
-  - docker
-
-addons:
-  apt:
-    packages:
-      - docker-ce
-
+branches:
+  only:
+    - travis-tomfoolery
 # install qemu-user before running docker build
 before_install:
+  - export DOCKER_CLI_EXPERIMENTAL=enabled
   - sudo docker run --privileged linuxkit/binfmt:v0.6
   - sudo docker run -d --privileged -p 1234:1234 --name buildkit moby/buildkit:latest --addr tcp://0.0.0.0:1234 --oci-worker-platform linux/amd64 --oci-worker-platform linux/armhf --oci-worker-platform linux/arm64
   - sudo docker cp buildkit:/usr/bin/buildctl /usr/bin/
   - export BUILDKIT_HOST=tcp://0.0.0.0:1234
 
-# Skip the install step. Don't `go get` dependencies. Only build with the code
-# in vendor/
-install: true
+install:
+  - ./.travis/configure_docker.sh
+  - export DOCKER_CLI_EXPERIMENTAL=enabled #enable experimental features install: true
 
 script:
-  - docker build -t incplusplus/spring-boot-websocket-chat-demo:arm64 --platform linux/arm64 .
+  - docker buildx build -t incplusplus/spring-boot-websocket-chat-demo:arm64 --platform linux/arm64 .
   - docker image list
   - docker image inspect incplusplus/spring-boot-websocket-chat-demo:arm64
 
