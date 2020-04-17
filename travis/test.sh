@@ -59,7 +59,7 @@ kubectl rollout status --namespace openfaas-fn deployment/nodeinfo-2
 kubectl rollout status --namespace openfaas-fn deployment/nodeinfo-3
 kubectl rollout status --namespace openfaas-fn deployment/nodeinfo-4
 
-helm upgrade --install --namespace openfaas --wait cron-connector ./chart/cron-connector --set image=zeerorg/cron-connector:test-build
+helm upgrade --install --namespace openfaas --wait cron-connector ./chart/cron-connector --set image=incplusplus/cron-connector:test-build
 
 sleep 70
 

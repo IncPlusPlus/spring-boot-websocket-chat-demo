@@ -21,7 +21,7 @@ buildctl build --frontend dockerfile.v0 \
       --local dockerfile=. \
       --local context=. \
       --exporter image \
-      --exporter-opt name=docker.io/zeerorg/cron-connector:$TRAVIS_TAG \
+      --exporter-opt name=docker.io/incplusplus/cron-connector:$TRAVIS_TAG \
       --exporter-opt push=true \
       --frontend-opt platform=$platforms \
       --frontend-opt filename=./Dockerfile.cross
@@ -34,7 +34,7 @@ do
       --local dockerfile=. \
       --local context=. \
       --exporter image \
-      --exporter-opt name=docker.io/zeerorg/cron-connector:$TRAVIS_TAG-$arch \
+      --exporter-opt name=docker.io/incplusplus/cron-connector:$TRAVIS_TAG-$arch \
       --exporter-opt push=true \
       --frontend-opt platform=linux/$arch \
       --frontend-opt filename=./Dockerfile.cross &
@@ -42,6 +42,6 @@ done
 
 wait
 
-docker pull zeerorg/cron-connector:$TRAVIS_TAG-arm
-docker tag zeerorg/cron-connector:$TRAVIS_TAG-arm zeerorg/cron-connector:$TRAVIS_TAG-armhf
-docker push zeerorg/cron-connector:$TRAVIS_TAG-armhf
+docker pull incplusplus/cron-connector:$TRAVIS_TAG-arm
+docker tag incplusplus/cron-connector:$TRAVIS_TAG-arm incplusplus/cron-connector:$TRAVIS_TAG-armhf
+docker push incplusplus/cron-connector:$TRAVIS_TAG-armhf
