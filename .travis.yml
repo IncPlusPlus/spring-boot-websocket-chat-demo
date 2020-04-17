@@ -38,7 +38,7 @@ jobs:
           script:
           - while sleep 9m; do echo "=====[ $SECONDS seconds, build-docker still building... ]====="; done &
           - docker buildx build . -t incplusplus/spring-boot-websocket-chat-demo-amd64:latest --platform amd64 > output
-          - docker save --output docker_cached/spring-boot-websocket-chat-demo-amd64.tar spring-boot-websocket-chat-demo-amd64:latest
+          - docker save --output docker_cached/spring-boot-websocket-chat-demo-amd64.tar incplusplus/spring-boot-websocket-chat-demo-amd64:latest
 
         - 
           ### armhf Docker images
@@ -166,15 +166,15 @@ jobs:
           - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
 
           ### x86 Docker images
-          - docker tag ownyourbits/spring-boot-websocket-chat-demo-amd64:latest $DOCKER_USERNAME/spring-boot-websocket-chat-demo-x86:"${version}"
+          - docker tag $DOCKER_USERNAME/spring-boot-websocket-chat-demo-amd64:latest $DOCKER_USERNAME/spring-boot-websocket-chat-demo-x86:"${version}"
           - docker push $DOCKER_USERNAME/spring-boot-websocket-chat-demo-x86:"${version}"
 
           ### armhf Docker images
-          - docker tag ownyourbits/spring-boot-websocket-chat-demo-armhf:latest $DOCKER_USERNAME/spring-boot-websocket-chat-demo-armhf:"${version}"
+          - docker tag $DOCKER_USERNAME/spring-boot-websocket-chat-demo-armhf:latest $DOCKER_USERNAME/spring-boot-websocket-chat-demo-armhf:"${version}"
           - docker push $DOCKER_USERNAME/spring-boot-websocket-chat-demo-armhf:"${version}"
 
           ### arm64v8 Docker images
-          - docker tag ownyourbits/spring-boot-websocket-chat-demo-arm64:latest $DOCKER_USERNAME/spring-boot-websocket-chat-demo-arm64:"${version}"
+          - docker tag $DOCKER_USERNAME/spring-boot-websocket-chat-demo-arm64:latest $DOCKER_USERNAME/spring-boot-websocket-chat-demo-arm64:"${version}"
           - docker push $DOCKER_USERNAME/spring-boot-websocket-chat-demo-arm64:"${version}"
 
           # Manifest
