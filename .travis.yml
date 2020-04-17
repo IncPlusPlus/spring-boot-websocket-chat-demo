@@ -52,7 +52,7 @@ jobs:
           script: 
           - while sleep 9m; do echo "=====[ $SECONDS seconds, build-docker still building... ]====="; done &
           - docker buildx build . -t incplusplus/spring-boot-websocket-chat-demo-armhf:latest --platform armhf > output
-          - docker save --output docker_cached/incplusplus/spring-boot-websocket-chat-demo-armhf.tar incplusplus/spring-boot-websocket-chat-demo-armhf:latest
+          - docker save --output docker_cached/spring-boot-websocket-chat-demo-armhf.tar incplusplus/spring-boot-websocket-chat-demo-armhf:latest
 
         -
           ### arm64 Docker images
@@ -66,7 +66,7 @@ jobs:
           script:
           - while sleep 9m; do echo "=====[ $SECONDS seconds, build-docker still building... ]====="; done &
           - docker buildx build . -t incplusplus/spring-boot-websocket-chat-demo-arm64:latest --platform linux/arm64 > output
-          - docker save --output docker_cached/spring-boot-websocket-chat-demo-arm64.tar ownyourbits/spring-boot-websocket-chat-demo-arm64:latest
+          - docker save --output docker_cached/spring-boot-websocket-chat-demo-arm64.tar incplusplus/spring-boot-websocket-chat-demo-arm64:latest
 
         - stage: testing
 
