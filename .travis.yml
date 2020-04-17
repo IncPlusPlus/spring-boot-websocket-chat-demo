@@ -1,0 +1,297 @@
+# dist: xenial is required to run "multiarch/qemu-user-static -p yes".
+# dist: trusty does not work for that.
+# I am not sure if the reason is the trusty's Linux kernel is old.
+# "multiarch/qemu-user-static" image uses Linux kernel feature binfmt_misc
+# in it.
+dist: xenial
+# This means your current language mode.
+language: c
+services: docker
+os: linux
+
+# Definitions using YAML's anchor (&) and reference (*).
+.com.github.junaruga.ci-multi-arch-test.matrix-definitions:
+  # Recommended way 1. It's easy to implement.
+  # But the way using "-p yes" (binfmt_misc persistent option)
+  # might be slower than below alternative ways.
+  - &test_in_container
+    # language: bash or generic is good to run container.
+    language: bash
+    install:
+      - ls /proc/sys/fs/binfmt_misc/
+      - |
+        if [ "$(uname -m)" = x86_64 ]; then
+          docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
+        fi
+      - ls /proc/sys/fs/binfmt_misc/
+      - |
+        travis_retry docker build --rm -t sample \
+          --build-arg BASE_IMAGE=${BASE_IMAGE} \
+          -f Dockerfile-${OS_NAME} \
+          .
+    script:
+      - docker run --rm -t sample ./sample_test.sh
+  # A case to check only "uname"'s result without building a container.
+  - &test_simple_in_container
+    language: bash
+    install:
+      - ls /proc/sys/fs/binfmt_misc/
+      - docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
+      - ls /proc/sys/fs/binfmt_misc/
+    script:
+      - docker run --rm -t "${BASE_IMAGE}" uname -a
+  # Recommended way 2. This way does not use binfmt_misc persistent option.
+  # It uses multiarch/qemu-user-static:$arch container in Dockerfile.
+  - &test_in_container_qemu_interpreter
+    language: bash
+    install:
+      - ls /proc/sys/fs/binfmt_misc/
+      - docker run --rm --privileged multiarch/qemu-user-static:register --reset
+      - ls /proc/sys/fs/binfmt_misc/
+      - |
+        travis_retry docker build --rm -t sample \
+          --build-arg ARCH=${ARCH} \
+          --build-arg BASE_IMAGE=${BASE_IMAGE} \
+          -f Dockerfile-${OS_NAME} \
+          .
+    script:
+      - docker run --rm -t sample ./sample_test.sh
+  # The way to use compatible os images (multiarch's ubuntu image etc) is deprecated.
+  # But it might be faster than above recommended ways.
+  - &test_in_container_compatible_image
+    language: bash
+    install:
+      - ls /proc/sys/fs/binfmt_misc/
+      - docker run --rm --privileged multiarch/qemu-user-static:register --reset
+      - ls /proc/sys/fs/binfmt_misc/
+      - |
+        travis_retry docker build --rm -t sample \
+          --build-arg BASE_IMAGE=${BASE_IMAGE} \
+          -f Dockerfile-${OS_NAME} \
+          .
+    script:
+      - docker run --rm -t sample ./sample_test.sh
+  - &inspect_image
+    addons:
+      apt:
+        config:
+          retries: true
+        update: true
+        sources:
+          - sourceline: 'ppa:projectatomic/ppa'
+        packages:
+          - jq
+          - skopeo
+    before_install:
+      - BASE_IMAGE="$BASE_IMAGE@$(script/print-manifest-arch-digest.sh "$BASE_IMAGE" "$MANIFEST_ARCH")"
+
+matrix:
+  include:
+    # Intel, 64-bit, Little-endian
+    - name: ubuntu-x86_64-linux-native
+    # Intel, 32-bit, Little-endian
+    - name: ubuntu-i386-linux
+      # A container job with QEMU takes more running time (2 ~ 4 times).
+      # You can run non-important job only for cron mode
+      # or any specific environment variable (ex: CI_CRON: 1) is set,
+      # avoiding to run it at pull-request timing.
+      # if: type = cron or CI_CRON = 1
+      # if: type = cron
+      env:
+        - BASE_IMAGE=i386/ubuntu
+      <<: *test_in_container
+    - name: ubuntu-i386-linux-qemu-interpreter
+      env:
+        - ARCH=i386
+        - BASE_IMAGE=i386/ubuntu
+        - OS_NAME=ubuntu-qemu
+      <<: *test_in_container_qemu_interpreter
+    - name: ubuntu-i386-linux-compatible-image
+      env:
+        - BASE_IMAGE=multiarch/ubuntu-debootstrap:i386-bionic
+      <<: *test_in_container_compatible_image
+    # ARM, 64-bit, Little-endian
+    - name: ubuntu-aarch64-linux-native
+      arch: arm64
+    - name: ubuntu-aarch64-linux
+      env:
+        - BASE_IMAGE=arm64v8/ubuntu
+      <<: *test_in_container
+    - name: ubuntu-aarch64-linux-qemu-interpreter
+      env:
+        - ARCH=aarch64
+        - BASE_IMAGE=arm64v8/ubuntu
+        - OS_NAME=ubuntu-qemu
+      <<: *test_in_container_qemu_interpreter
+    - name: ubuntu-aarch64-linux-compatible-image
+      env:
+        - BASE_IMAGE=multiarch/ubuntu-debootstrap:arm64-bionic
+      <<: *test_in_container_compatible_image
+    # ARM, 32-bit, Little-endian
+    - name: ubuntu-arm32-linux
+      env:
+        - BASE_IMAGE=arm32v7/ubuntu
+      <<: *test_in_container
+    - name: ubuntu-arm32-linux-qemu-interpreter
+      env:
+        - ARCH=arm
+        - BASE_IMAGE=arm32v7/ubuntu
+        - OS_NAME=ubuntu-qemu
+      <<: *test_in_container_qemu_interpreter
+    - name: ubuntu-arm32-linux-compatible-image
+      env:
+        - BASE_IMAGE=multiarch/ubuntu-debootstrap:armhf-bionic
+      <<: *test_in_container_compatible_image
+    # PowerPC, 64-bit, Little-endian
+    - name: ubuntu-ppc64le-linux
+      env:
+        - BASE_IMAGE=ppc64le/ubuntu
+      <<: *test_in_container
+    - name: ubuntu-ppc64le-linux-native
+      os: linux-ppc64le
+    # IBM Z and LinuxONE, 64-bit, Big-endian
+    - name: ubuntu-s390x-linux
+      env:
+        - BASE_IMAGE=s390x/ubuntu
+      <<: *test_in_container
+    - name: ubuntu-s390x-linux-simple
+      env:
+        - BASE_IMAGE=s390x/ubuntu
+      <<: *test_simple_in_container
+    - name: ubuntu-s390x-linux-qemu-interpreter
+      env:
+        - ARCH=s390x
+        - BASE_IMAGE=s390x/ubuntu
+        - OS_NAME=ubuntu-qemu
+      <<: *test_in_container_qemu_interpreter
+    # PowerPC, 64-bit, Big-endian
+    - name: ubuntu-ppc64-linux-compatible-image
+      env:
+        - BASE_IMAGE=multiarch/ubuntu-debootstrap:powerpc-xenial
+      <<: *test_in_container_compatible_image
+    # Intel, 32-bit, Little-endian
+    - name: debian-i386-linux
+      env:
+        - BASE_IMAGE=i386/debian
+        - OS_NAME=debian
+      <<: *test_in_container
+    # ARM, 64-bit, Little-endian
+    - name: debian-aarch64-linux
+      env:
+        - BASE_IMAGE=arm64v8/debian
+        - OS_NAME=debian
+      <<: *test_in_container
+    # ARM, 32-bit, Little-endian
+    - name: debian-arm32-linux
+      env:
+        - BASE_IMAGE=arm32v7/debian
+        - OS_NAME=debian
+      <<: *test_in_container
+    # PowerPC, 64-bit, Little-endian
+    - name: debian-ppc64le-linux
+      env:
+        - BASE_IMAGE=ppc64le/debian
+        - OS_NAME=debian
+      <<: *test_in_container
+    # IBM Z and LinuxONE, 64-bit, Big-endian
+    - name: debian-s390x-linux
+      env:
+        - BASE_IMAGE=s390x/debian
+        - OS_NAME=debian
+      <<: *test_in_container
+    # Intel, 32-bit, Little-endian
+    - name: centos-i386-linux
+      env:
+        - BASE_IMAGE=i386/centos
+        - OS_NAME=centos
+      <<: *test_in_container
+    # ARM, 64-bit, Little-endian
+    - name: centos-aarch64-linux
+      env:
+        - BASE_IMAGE=arm64v8/centos
+        - OS_NAME=centos
+      <<: *test_in_container
+    # PowerPC, 64-bit, Little-endian
+    - name: centos-ppc64le-linux
+      env:
+        - BASE_IMAGE=ppc64le/centos
+        - OS_NAME=centos
+      <<: *test_in_container
+    # ARM, 64-bit, Little-endian
+    - name: fedora-aarch64-linux
+      env:
+        - BASE_IMAGE=arm64v8/fedora
+        - OS_NAME=fedora
+      <<: *test_in_container
+    # PowerPC, 64-bit, Little-endian
+    - name: fedora-ppc64le-linux
+      env:
+        - BASE_IMAGE=ppc64le/fedora
+        - OS_NAME=fedora
+      <<: *test_in_container
+    # PowerPC, 64-bit, Big-endian
+    - name: fedora-s390x-linux
+      env:
+        - BASE_IMAGE=s390x/fedora
+        - OS_NAME=fedora
+      <<: *test_in_container
+    # Intel, 64-bit, Little-endian
+    - name: rhel-x86_64-linux-native
+      env:
+        - BASE_IMAGE=registry.access.redhat.com/ubi8:8.0
+        - OS_NAME=rhel
+      <<: *test_in_container
+    # ARM, 64-bit, Little-endian
+    - name: rhel-aarch64-linux
+      env:
+        - BASE_IMAGE=registry.access.redhat.com/ubi8:8.0
+        - OS_NAME=rhel
+        - MANIFEST_ARCH=arm64
+      <<: *inspect_image
+      <<: *test_in_container
+    # PowerPC, 64-bit, Little-endian
+    - name: rhel-ppc64le-linux-native
+      os: linux-ppc64le
+      env:
+        - BASE_IMAGE=registry.access.redhat.com/ubi8:8.0
+        - OS_NAME=rhel
+      <<: *test_in_container
+    # "dnf -y update" ouptuts an error:
+    # "qemu: uncaught target signal 11 (Segmentation fault) - core dumped"
+    # - name: rhel-ppc64le-linux
+    #   env:
+    #     - BASE_IMAGE=registry.access.redhat.com/ubi8:8.0
+    #     - OS_NAME=rhel
+    #     - MANIFEST_ARCH=ppc64le
+    #   <<: *inspect_image
+    #   <<: *test_in_container
+    # IBM Z and LinuxONE, 64-bit, Big-endian
+    - name: rhel-s390x-linux
+      env:
+        - BASE_IMAGE=registry.access.redhat.com/ubi8:8.0
+        - OS_NAME=rhel
+        - MANIFEST_ARCH=s390x
+      <<: *inspect_image
+      <<: *test_in_container
+  allow_failures:
+    # `dnf update` on QEMU outputs core dump.
+    # https://travis-ci.org/junaruga/ci-multi-arch-test/jobs/617843947#L238
+    - name: fedora-ppc64le-linux
+    # No package epel-release available.
+    # https://travis-ci.org/junaruga/ci-multi-arch-test/jobs/568490418
+    - name: centos-i386-linux
+  fast_finish: true
+before_install:
+  # Show environment.
+  - uname -a
+  - id
+  - pwd
+  - "OS_NAME=${OS_NAME:-ubuntu}"
+  - echo OS_NAME=${OS_NAME} BASE_IMAGE=${BASE_IMAGE}
+# Logic without container and QEMU.
+# This means your current logic.
+install: true
+script: ./sample_test.sh
+branches:
+  only:
+    - master
