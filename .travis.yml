@@ -292,6 +292,6 @@ before_install:
 # This means your current logic.
 install: true
 script: ./sample_test.sh
-branches:
-  only:
-    - master
+#branches:
+#  only:
+#    - master
