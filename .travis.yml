@@ -27,7 +27,7 @@ before_install:
 jobs:
   include:
         - stage: building
-
+          name: "Build x86 Docker images"
           ### x86 Docker images
 
           before_script:
@@ -42,7 +42,7 @@ jobs:
 
         - 
           ### armhf Docker images
-
+          name: "Build armhf Docker images"
           before_script:
           - sudo apt-get --yes --no-install-recommends install binfmt-support qemu-user-static
           - ./.travis/configure_docker.sh #upgrading docker and installing packages for arm architecture
@@ -56,7 +56,7 @@ jobs:
 
         -
           ### arm64 Docker images
-
+          name: "Build arm64 Docker images"
           before_script:
           - sudo apt-get --yes --no-install-recommends install binfmt-support qemu-user-static
           - ./.travis/configure_docker.sh #upgrading docker and installing packages for arm architecture
