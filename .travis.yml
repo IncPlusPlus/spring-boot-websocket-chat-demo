@@ -29,7 +29,6 @@ jobs:
         - stage: building
 
           ### x86 Docker images
-          install: true
 
           before_script:
           - ./.travis/configure_docker.sh #upgrading docker
@@ -43,7 +42,6 @@ jobs:
 
         - 
           ### armhf Docker images
-          install: true
 
           before_script:
           - sudo apt-get --yes --no-install-recommends install binfmt-support qemu-user-static
@@ -58,7 +56,6 @@ jobs:
 
         -
           ### arm64 Docker images
-          install: true
 
           before_script:
           - sudo apt-get --yes --no-install-recommends install binfmt-support qemu-user-static
@@ -121,8 +118,7 @@ jobs:
           - sleep 60
           - ./tests/nextcloud_tests.py ${IP}
           - sleep 5
-          - ./tests/system_tests.py ncp@${IP} 
-
+          - ./tests/system_tests.py ncp@${IP}
         -
           ### arm64 Docker images
           install:
