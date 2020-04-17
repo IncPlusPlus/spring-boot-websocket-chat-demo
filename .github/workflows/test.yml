@@ -1,0 +1,38 @@
+on: push
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        docker_arch: [amd64, i386, arm32v6, arm32v7, arm64v8, ppc64le, s390x] # arm32v5 is not supported by alpine
+    steps:
+      - name: Register binfmt_misc entry for qemu-user-static
+        env:
+          DOCKER_ARCH: ${{ matrix.docker_arch }}
+        run: |
+          case ${DOCKER_ARCH} in
+          	amd64|i386)
+          		QEMU_ARCH=
+          		;;
+          	arm32*)
+          		QEMU_ARCH=arm
+          		;;
+          	arm64*)
+          		QEMU_ARCH=aarch64
+          		;;
+          	*)
+          		QEMU_ARCH=${DOCKER_ARCH}
+          		;;
+          esac
+          if [ -n "${QEMU_ARCH}" ]; then
+          	docker rm $(docker create --volume qemu-user-static:/usr/bin multiarch/qemu-user-static:${QEMU_ARCH} dummy)
+          	docker run --rm --privileged --volume qemu-user-static:/usr/bin:ro multiarch/qemu-user-static:register --persistent yes
+          fi
+      - name: Build
+        env:
+          DOCKER_ARCH: ${{ matrix.docker_arch }}
+        run: |
+          docker run --rm --interactive "${DOCKER_ARCH}/alpine:latest" <<-'EOF'
+          	echo 'Hello World!'
+          EOF
