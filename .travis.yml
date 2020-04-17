@@ -188,12 +188,12 @@ env:
   global:
     - DOCKER_USERNAME="incplusplus"
 
-deploy:
-  provider: script
-  script: bash ./travis/deploy.sh
-  skip_cleanup: true
-  on:
-    branch: travis-tomfoolery
+#deploy:
+#  provider: script
+#  script: bash ./travis/deploy.sh
+#  skip_cleanup: true
+#  on:
+#    branch: travis-tomfoolery
 
 notifications:
   email: false
