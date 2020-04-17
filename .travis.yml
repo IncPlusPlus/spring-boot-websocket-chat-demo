@@ -42,7 +42,7 @@ deploy:
   script: bash ./travis/deploy.sh
   skip_cleanup: true
   on:
-    tags: true
+    branch: travis-tomfoolery
 
 # Don't email me the results of the test runs.
 notifications:
