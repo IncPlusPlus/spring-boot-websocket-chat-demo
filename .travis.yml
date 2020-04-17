@@ -15,12 +15,12 @@ stages:
   - release
 
 # install qemu-user before running docker build
-#before_install:
-#  - export DOCKER_CLI_EXPERIMENTAL=enabled
-#  - sudo docker run --privileged linuxkit/binfmt:v0.6
-#  - sudo docker run -d --privileged -p 1234:1234 --name buildkit moby/buildkit:latest --addr tcp://0.0.0.0:1234 --oci-worker-platform linux/amd64 --oci-worker-platform linux/armhf --oci-worker-platform linux/arm64
-#  - sudo docker cp buildkit:/usr/bin/buildctl /usr/bin/
-#  - export BUILDKIT_HOST=tcp://0.0.0.0:1234
+before_install:
+  - export DOCKER_CLI_EXPERIMENTAL=enabled
+  - sudo docker run --privileged linuxkit/binfmt:v0.6
+  - sudo docker run -d --privileged -p 1234:1234 --name buildkit moby/buildkit:latest --addr tcp://0.0.0.0:1234 --oci-worker-platform linux/amd64 --oci-worker-platform linux/armhf --oci-worker-platform linux/arm64
+  - sudo docker cp buildkit:/usr/bin/buildctl /usr/bin/
+  - export BUILDKIT_HOST=tcp://0.0.0.0:1234
 #  - ./.travis/configure_docker.sh
 #  - export DOCKER_CLI_EXPERIMENTAL=enabled #enable experimental features install: true
 
@@ -36,14 +36,8 @@ jobs:
 
           script:
           - while sleep 9m; do echo "=====[ $SECONDS seconds, build-docker still building... ]====="; done & 
-          - DOCKER_BUILDKIT=1 docker build . -f docker/debian-ncp/Dockerfile -t ownyourbits/debian-ncp-amd64:latest --pull --build-arg arch=amd64 --build-arg arch_qemu=x86_64 > output
-          - DOCKER_BUILDKIT=1 docker build . -f docker/lamp/Dockerfile -t ownyourbits/lamp-amd64:latest --build-arg arch=amd64 > output
-          - DOCKER_BUILDKIT=1 docker build . -f docker/nextcloud/Dockerfile -t ownyourbits/nextcloud-amd64:latest --build-arg arch=amd64 > output
-          - DOCKER_BUILDKIT=1 docker build . -f docker/nextcloudpi/Dockerfile -t ownyourbits/nextcloudpi-amd64:latest --build-arg arch=amd64 > output
-          - docker save --output docker_cached/debian-ncp-amd64.tar ownyourbits/debian-ncp-amd64:latest
-          - docker save --output docker_cached/lamp-amd64.tar ownyourbits/lamp-amd64:latest
-          - docker save --output docker_cached/nextcloud-amd64.tar ownyourbits/nextcloud-amd64:latest
-          - docker save --output docker_cached/nextcloudpi-amd64.tar ownyourbits/nextcloudpi-amd64:latest
+          - docker buildx build . -t incplusplus/spring-boot-websocket-chat-demo-amd64:latest --platform amd64 > output
+          - docker save --output docker_cached/spring-boot-websocket-chat-demo-amd64.tar spring-boot-websocket-chat-demo-amd64:latest
 
         - 
           ### armhf Docker images
@@ -55,14 +49,8 @@ jobs:
 
           script: 
           - while sleep 9m; do echo "=====[ $SECONDS seconds, build-docker still building... ]====="; done &
-          - DOCKER_BUILDKIT=1 docker build . -f docker/debian-ncp/Dockerfile -t ownyourbits/debian-ncp-armhf:latest --pull --build-arg arch=armhf --build-arg arch_qemu=arm > output
-          - DOCKER_BUILDKIT=1 docker build . -f docker/lamp/Dockerfile -t ownyourbits/lamp-armhf:latest --build-arg arch=armhf > output
-          - DOCKER_BUILDKIT=1 docker build . -f docker/nextcloud/Dockerfile -t ownyourbits/nextcloud-armhf:latest --build-arg arch=armhf > output
-          - DOCKER_BUILDKIT=1 docker build . -f docker/nextcloudpi/Dockerfile -t ownyourbits/nextcloudpi-armhf:latest --build-arg arch=armhf > output
-          - docker save --output docker_cached/debian-ncp-armhf.tar ownyourbits/debian-nxp-armhf:latest 
-          - docker save --output docker_cached/lamp-armhf.tar ownyourbits/lamp-armhf:latest 
-          - docker save --output docker_cached/nextcloud-armhf.tar ownyourbits/nextcloud-armhf:latest
-          - docker save --output docker_cached/nextcloudpi-armhf.tar ownyourbits/nextcloudpi-armhf:latest
+          - docker buildx build . -t incplusplus/spring-boot-websocket-chat-demo-armhf:latest --platform armhf > output
+          - docker save --output docker_cached/incplusplus/spring-boot-websocket-chat-demo-armhf.tar incplusplus/spring-boot-websocket-chat-demo-armhf:latest
 
         -
           ### arm64 Docker images
@@ -74,14 +62,8 @@ jobs:
 
           script:
           - while sleep 9m; do echo "=====[ $SECONDS seconds, build-docker still building... ]====="; done &
-          - DOCKER_BUILDKIT=1 docker build . -f docker/debian-ncp/Dockerfile -t ownyourbits/debian-ncp-arm64v8:latest --build-arg arch=arm64v8 --build-arg arch_qemu=aarch64 > output
-          - DOCKER_BUILDKIT=1 docker build . -f docker/lamp/Dockerfile -t ownyourbits/lamp-arm64v8:latest --build-arg arch=arm64v8 > output
-          - DOCKER_BUILDKIT=1 docker build . -f docker/nextcloud/Dockerfile -t ownyourbits/nextcloud-arm64v8:latest --build-arg arch=arm64v8 > output
-          - DOCKER_BUILDKIT=1 docker build . -f docker/nextcloudpi/Dockerfile -t ownyourbits/nextcloudpi-arm64v8:latest --build-arg arch=arm64v8 > output
-          - docker save --output docker_cached/debian-ncp-arm64v8.tar ownyourbits/debian-ncp-arm64v8:latest 
-          - docker save --output docker_cached/lamp-arm64v8.tar ownyourbits/lamp-arm64v8:latest
-          - docker save --output docker_cached/nextcloud-arm64v8.tar ownyourbits/nextcloud-arm64v8:latest
-          - docker save --output docker_cached/nextcloudpi-arm64v8.tar ownyourbits/nextcloudpi-arm64v8:latest
+          - docker buildx build . -t incplusplus/spring-boot-websocket-chat-demo-arm64:latest --platform linux/arm64 > output
+          - docker save --output docker_cached/spring-boot-websocket-chat-demo-arm64.tar ownyourbits/spring-boot-websocket-chat-demo-arm64:latest
 
         - stage: testing
 
@@ -168,20 +150,11 @@ jobs:
           - export DOCKER_CLI_EXPERIMENTAL=enabled #enable experimental features 
  
           before_script:
-          - docker load --input docker_cached/debian-ncp-amd64.tar
-          - docker load --input docker_cached/lamp-amd64.tar
-          - docker load --input docker_cached/nextcloud-amd64.tar
-          - docker load --input docker_cached/nextcloudpi-amd64.tar
+          - docker load --input docker_cached/spring-boot-websocket-chat-demo-amd64.tar
 
-          - docker load --input docker_cached/debian-ncp-armhf.tar
-          - docker load --input docker_cached/lamp-armhf.tar
-          - docker load --input docker_cached/nextcloud-armhf.tar
-          - docker load --input docker_cached/nextcloudpi-armhf.tar
+          - docker load --input docker_cached/spring-boot-websocket-chat-demo-armhf.tar
 
-          - docker load --input docker_cached/debian-ncp-arm64v8.tar
-          - docker load --input docker_cached/lamp-arm64v8.tar
-          - docker load --input docker_cached/nextcloud-arm64v8.tar
-          - docker load --input docker_cached/nextcloudpi-arm64v8.tar
+          - docker load --input docker_cached/spring-boot-websocket-chat-demo-arm64.tar
 
           - version=$(git describe --tags --always)
           - version=${version%-*-*}
@@ -191,44 +164,23 @@ jobs:
           - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
 
           ### x86 Docker images
-          - docker tag ownyourbits/debian-ncp-amd64:latest $DOCKER_USERNAME/debian-ncp-x86:"${version}"
-          - docker tag ownyourbits/lamp-amd64:latest $DOCKER_USERNAME/lamp-x86:"${version}"
-          - docker tag ownyourbits/nextcloud-amd64:latest $DOCKER_USERNAME/nextcloud-x86:"${version}"
-          - docker tag ownyourbits/nextcloudpi-amd64:latest $DOCKER_USERNAME/nextcloudpi-x86:"${version}"
-
-          - docker push $DOCKER_USERNAME/debian-ncp-x86:"${version}"
-          - docker push $DOCKER_USERNAME/lamp-x86:"${version}"
-          - docker push $DOCKER_USERNAME/nextcloud-x86:"${version}"
-          - docker push $DOCKER_USERNAME/nextcloudpi-x86:"${version}"
+          - docker tag ownyourbits/spring-boot-websocket-chat-demo-amd64:latest $DOCKER_USERNAME/spring-boot-websocket-chat-demo-x86:"${version}"
+          - docker push $DOCKER_USERNAME/spring-boot-websocket-chat-demo-x86:"${version}"
 
           ### armhf Docker images
-          - docker tag ownyourbits/debian-ncp-armhf:latest $DOCKER_USERNAME/debian-ncp-armhf:"${version}"
-          - docker tag ownyourbits/lamp-armhf:latest $DOCKER_USERNAME/lamp-armhf:"${version}"
-          - docker tag ownyourbits/nextcloud-armhf:latest $DOCKER_USERNAME/nextcloud-armhf:"${version}"
-          - docker tag ownyourbits/nextcloudpi-armhf:latest $DOCKER_USERNAME/nextcloudpi-armhf:"${version}"
-
-          - docker push $DOCKER_USERNAME/debian-ncp-armhf:"${version}"
-          - docker push $DOCKER_USERNAME/lamp-armhf:"${version}"
-          - docker push $DOCKER_USERNAME/nextcloud-armhf:"${version}"
-          - docker push $DOCKER_USERNAME/nextcloudpi-armhf:"${version}"
+          - docker tag ownyourbits/spring-boot-websocket-chat-demo-armhf:latest $DOCKER_USERNAME/spring-boot-websocket-chat-demo-armhf:"${version}"
+          - docker push $DOCKER_USERNAME/spring-boot-websocket-chat-demo-armhf:"${version}"
 
           ### arm64v8 Docker images
-          - docker tag ownyourbits/debian-ncp-arm64v8:latest $DOCKER_USERNAME/debian-ncp-arm64:"${version}"
-          - docker tag ownyourbits/lamp-arm64v8:latest $DOCKER_USERNAME/lamp-arm64:"${version}"
-          - docker tag ownyourbits/nextcloud-arm64v8:latest $DOCKER_USERNAME/nextcloud-arm64:"${version}"
-          - docker tag ownyourbits/nextcloudpi-arm64v8:latest $DOCKER_USERNAME/nextcloudpi-arm64:"${version}"
-
-          - docker push $DOCKER_USERNAME/debian-ncp-arm64:"${version}"
-          - docker push $DOCKER_USERNAME/lamp-arm64:"${version}"
-          - docker push $DOCKER_USERNAME/nextcloud-arm64:"${version}"
-          - docker push $DOCKER_USERNAME/nextcloudpi-arm64:"${version}"
+          - docker tag ownyourbits/spring-boot-websocket-chat-demo-arm64:latest $DOCKER_USERNAME/spring-boot-websocket-chat-demo-arm64:"${version}"
+          - docker push $DOCKER_USERNAME/spring-boot-websocket-chat-demo-arm64:"${version}"
 
           # Manifest
 
-          - docker manifest create --amend $DOCKER_USERNAME/nextcloudpi $DOCKER_USERNAME/nextcloudpi-x86 $DOCKER_USERNAME/nextcloudpi-armhf $DOCKER_USERNAME/nextcloudpi-arm64
-          - docker manifest annotate $DOCKER_USERNAME/nextcloudpi $DOCKER_USERNAME/nextcloudpi-x86 --os linux --arch amd64
-          - docker manifest annotate $DOCKER_USERNAME/nextcloudpi $DOCKER_USERNAME/nextcloudpi-armhf --os linux --arch arm
-          - docker manifest annotate $DOCKER_USERNAME/nextcloudpi $DOCKER_USERNAME/nextcloudpi-arm64 --os linux --arch arm64v8
+          - docker manifest create --amend $DOCKER_USERNAME/spring-boot-websocket-chat-demo $DOCKER_USERNAME/spring-boot-websocket-chat-demo-x86 $DOCKER_USERNAME/spring-boot-websocket-chat-demo-armhf $DOCKER_USERNAME/spring-boot-websocket-chat-demo-arm64
+          - docker manifest annotate $DOCKER_USERNAME/spring-boot-websocket-chat-demo $DOCKER_USERNAME/spring-boot-websocket-chat-demo-x86 --os linux --arch amd64
+          - docker manifest annotate $DOCKER_USERNAME/spring-boot-websocket-chat-demo $DOCKER_USERNAME/spring-boot-websocket-chat-demo-armhf --os linux --arch arm
+          - docker manifest annotate $DOCKER_USERNAME/spring-boot-websocket-chat-demo $DOCKER_USERNAME/spring-boot-websocket-chat-demo-arm64 --os linux --arch arm64
 
 
 deploy:
