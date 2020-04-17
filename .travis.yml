@@ -3,7 +3,6 @@ sudo: true
 os: linux
 dist: xenial
 language: java
-install: true
 
 cache:
   directories:
@@ -30,7 +29,7 @@ jobs:
         - stage: building
 
           ### x86 Docker images
-          install:
+          install: true
           - ./.travis/configure_docker.sh #upgrading docker
           - export DOCKER_CLI_EXPERIMENTAL=enabled #enable experimental features
           - docker version #Check Docker 18.09 is installed
@@ -42,7 +41,7 @@ jobs:
 
         - 
           ### armhf Docker images
-          install:
+          install: true
           - sudo apt-get --yes --no-install-recommends install binfmt-support qemu-user-static
           - ./.travis/configure_docker.sh #upgrading docker and installing packages for arm architecture
           - export DOCKER_CLI_EXPERIMENTAL=enabled #enable experimental features
@@ -55,7 +54,7 @@ jobs:
 
         -
           ### arm64 Docker images
-          install:
+          install: true
           - sudo apt-get --yes --no-install-recommends install binfmt-support qemu-user-static
           - ./.travis/configure_docker.sh #upgrading docker and installing packages for arm architecture
           - export DOCKER_CLI_EXPERIMENTAL=enabled #enable experimental features
