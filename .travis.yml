@@ -37,9 +37,7 @@ jobs:
           script:
           - while sleep 9m; do echo "=====[ $SECONDS seconds, build-docker still building... ]====="; done & 
           - DOCKER_BUILDKIT=1 docker build . -f docker/debian-ncp/Dockerfile -t ownyourbits/debian-ncp-amd64:latest --pull --build-arg arch=amd64 --build-arg arch_qemu=x86_64 > output
-          - sed -i "/innodb_file_format=barracuda/a open_files_limit=65536" lamp.sh
           - DOCKER_BUILDKIT=1 docker build . -f docker/lamp/Dockerfile -t ownyourbits/lamp-amd64:latest --build-arg arch=amd64 > output
-          - sed -i '/open_files_limit=65536/d' lamp.sh
           - DOCKER_BUILDKIT=1 docker build . -f docker/nextcloud/Dockerfile -t ownyourbits/nextcloud-amd64:latest --build-arg arch=amd64 > output
           - DOCKER_BUILDKIT=1 docker build . -f docker/nextcloudpi/Dockerfile -t ownyourbits/nextcloudpi-amd64:latest --build-arg arch=amd64 > output
           - docker save --output docker_cached/debian-ncp-amd64.tar ownyourbits/debian-ncp-amd64:latest
@@ -58,9 +56,7 @@ jobs:
           script: 
           - while sleep 9m; do echo "=====[ $SECONDS seconds, build-docker still building... ]====="; done &
           - DOCKER_BUILDKIT=1 docker build . -f docker/debian-ncp/Dockerfile -t ownyourbits/debian-ncp-armhf:latest --pull --build-arg arch=armhf --build-arg arch_qemu=arm > output
-          - sed -i "/innodb_file_format=barracuda/a open_files_limit=65536" lamp.sh
           - DOCKER_BUILDKIT=1 docker build . -f docker/lamp/Dockerfile -t ownyourbits/lamp-armhf:latest --build-arg arch=armhf > output
-          - sed -i '/open_files_limit=65536/d' lamp.sh
           - DOCKER_BUILDKIT=1 docker build . -f docker/nextcloud/Dockerfile -t ownyourbits/nextcloud-armhf:latest --build-arg arch=armhf > output
           - DOCKER_BUILDKIT=1 docker build . -f docker/nextcloudpi/Dockerfile -t ownyourbits/nextcloudpi-armhf:latest --build-arg arch=armhf > output
           - docker save --output docker_cached/debian-ncp-armhf.tar ownyourbits/debian-nxp-armhf:latest 
@@ -79,9 +75,7 @@ jobs:
           script:
           - while sleep 9m; do echo "=====[ $SECONDS seconds, build-docker still building... ]====="; done &
           - DOCKER_BUILDKIT=1 docker build . -f docker/debian-ncp/Dockerfile -t ownyourbits/debian-ncp-arm64v8:latest --build-arg arch=arm64v8 --build-arg arch_qemu=aarch64 > output
-          - sed -i "/innodb_file_format=barracuda/a open_files_limit=65536" lamp.sh
           - DOCKER_BUILDKIT=1 docker build . -f docker/lamp/Dockerfile -t ownyourbits/lamp-arm64v8:latest --build-arg arch=arm64v8 > output
-          - sed -i '/open_files_limit=65536/d' lamp.sh
           - DOCKER_BUILDKIT=1 docker build . -f docker/nextcloud/Dockerfile -t ownyourbits/nextcloud-arm64v8:latest --build-arg arch=arm64v8 > output
           - DOCKER_BUILDKIT=1 docker build . -f docker/nextcloudpi/Dockerfile -t ownyourbits/nextcloudpi-arm64v8:latest --build-arg arch=arm64v8 > output
           - docker save --output docker_cached/debian-ncp-arm64v8.tar ownyourbits/debian-ncp-arm64v8:latest 
