@@ -184,6 +184,9 @@ jobs:
           - docker manifest annotate $DOCKER_USERNAME/spring-boot-websocket-chat-demo $DOCKER_USERNAME/spring-boot-websocket-chat-demo-armhf --os linux --arch arm
           - docker manifest annotate $DOCKER_USERNAME/spring-boot-websocket-chat-demo $DOCKER_USERNAME/spring-boot-websocket-chat-demo-arm64 --os linux --arch arm64
 
+env:
+  global:
+    - DOCKER_USERNAME="incplusplus"
 
 deploy:
   provider: script
