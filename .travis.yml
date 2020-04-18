@@ -76,6 +76,7 @@ jobs:
           - export DOCKER_CLI_EXPERIMENTAL=enabled #enable experimental features
             
           before_script:
+          - ls docker_cached
           - docker load --input docker_cached/spring-boot-websocket-chat-demo-amd64.tar
           - IP=$(ip route get 8.8.8.8 | awk -F"src " 'NR==1{split($2,a," ");print a[1]}')
           - docker run -d -p 8080:8080 --name spring-boot-websocket-chat-demo incplusplus/spring-boot-websocket-chat-demo-amd64:latest
@@ -93,6 +94,7 @@ jobs:
             - export DOCKER_CLI_EXPERIMENTAL=enabled #enable experimental features
 
           before_script:
+            - ls docker_cached
             - docker load --input docker_cached/spring-boot-websocket-chat-demo-amd64.tar
             - IP=$(ip route get 8.8.8.8 | awk -F"src " 'NR==1{split($2,a," ");print a[1]}')
             - docker run -d -p 8080:8080 --name spring-boot-websocket-chat-demo incplusplus/spring-boot-websocket-chat-demo-armhf:latest
@@ -109,6 +111,7 @@ jobs:
             - export DOCKER_CLI_EXPERIMENTAL=enabled #enable experimental features
 
           before_script:
+            - ls docker_cached
             - docker load --input docker_cached/spring-boot-websocket-chat-demo-amd64.tar
             - IP=$(ip route get 8.8.8.8 | awk -F"src " 'NR==1{split($2,a," ");print a[1]}')
             - docker run -d -p 8080:8080 --name spring-boot-websocket-chat-demo incplusplus/spring-boot-websocket-chat-demo-arm64:latest
