@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -o errexit
+set -e
 
 echo "INFO:
 Updating docker configuration
