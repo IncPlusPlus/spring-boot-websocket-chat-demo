@@ -16,6 +16,7 @@ check_actuator_status() {
   curl_result=$(curl -s "$host":"$port""$url")
   if [[ "$desired_actuator_status" == "$curl_result" ]]; then
     echo All good! Actuator status is as-expected.
+    exit 0
   else
     echo ERROR! Expecting "$desired_actuator_status" but got "$curl_result"
     exit 1
