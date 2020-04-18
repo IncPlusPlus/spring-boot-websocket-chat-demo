@@ -43,7 +43,7 @@ while [[ "$endpoint_up" == false ]]; do
       echo Timed out while waiting for server to start.
       echo Docker containers:
       docker ps
-      echo Printing log from server
+      echo Printing log from server "("container id "$container_id"")"
       docker logs "$container_id"
       exit 1
     else
