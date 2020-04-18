@@ -11,7 +11,7 @@ cache:
 
 stages:
   - building
-#  - testing
+  - testing
   - release
 
 # install qemu-user before running docker build
@@ -68,65 +68,65 @@ jobs:
           - docker buildx build . -t incplusplus/spring-boot-websocket-chat-demo-arm64:latest --platform linux/arm64 > output
           - docker save --output docker_cached/spring-boot-websocket-chat-demo-arm64.tar incplusplus/spring-boot-websocket-chat-demo-arm64:latest
 
-#        - stage: testing
-#
-#          ### x86 Docker images
-#          name: "Test amd64 Docker image"
-#          install:
-#          - ./.travis/configure_docker.sh
-#          - export DOCKER_CLI_EXPERIMENTAL=enabled #enable experimental features
-#
-#          before_script:
-#          - ls docker_cached
-#          - docker load --input docker_cached/spring-boot-websocket-chat-demo-amd64.tar
-#          - IP=$(ip route get 8.8.8.8 | awk -F"src " 'NR==1{split($2,a," ");print a[1]}')
-#          - container_id=$(docker run -d -p 8080:8080 incplusplus/spring-boot-websocket-chat-demo-amd64:latest)
-#          - echo "Container ID" $container_id
-#
-#          script:
-#          - ./.travis/test_actuator.sh $container_id localhost 8080 /actuator/health
-#
-#          after_script:
-#            - docker stop spring-boot-websocket-chat-demo
-#
-#        -
-#          ### armhf Docker images
-#          name: "Test armhf Docker image"
-#          install:
-#            - ./.travis/configure_docker.sh
-#            - export DOCKER_CLI_EXPERIMENTAL=enabled #enable experimental features
-#
-#          before_script:
-#            - ls docker_cached
-#            - docker load --input docker_cached/spring-boot-websocket-chat-demo-armhf.tar
-#            - IP=$(ip route get 8.8.8.8 | awk -F"src " 'NR==1{split($2,a," ");print a[1]}')
-#            - container_id=$(docker run -d -p 8080:8080 incplusplus/spring-boot-websocket-chat-demo-armhf:latest)
-#            - echo "Container ID" $container_id
-#
-#          script:
-#            - ./.travis/test_actuator.sh $container_id localhost 8080 /actuator/health
-#
-#          after_script:
-#            - docker stop spring-boot-websocket-chat-demo
-#        -
-#          ### arm64 Docker images
-#          name: "Test arm64 Docker image"
-#          install:
-#            - ./.travis/configure_docker.sh
-#            - export DOCKER_CLI_EXPERIMENTAL=enabled #enable experimental features
-#
-#          before_script:
-#            - ls docker_cached
-#            - docker load --input docker_cached/spring-boot-websocket-chat-demo-arm64.tar
-#            - IP=$(ip route get 8.8.8.8 | awk -F"src " 'NR==1{split($2,a," ");print a[1]}')
-#            - container_id=$(docker run -d -p 8080:8080 incplusplus/spring-boot-websocket-chat-demo-arm64:latest)
-#            - echo "Container ID" $container_id
-#
-#          script:
-#            - ./.travis/test_actuator.sh $container_id localhost 8080 /actuator/health
-#
-#          after_script:
-#            - docker stop spring-boot-websocket-chat-demo
+        - stage: testing
+
+          ### x86 Docker images
+          name: "Test amd64 Docker image"
+          install:
+          - ./.travis/configure_docker.sh
+          - export DOCKER_CLI_EXPERIMENTAL=enabled #enable experimental features
+            
+          before_script:
+          - ls docker_cached
+          - docker load --input docker_cached/spring-boot-websocket-chat-demo-amd64.tar
+          - IP=$(ip route get 8.8.8.8 | awk -F"src " 'NR==1{split($2,a," ");print a[1]}')
+          - container_id=$(docker run -d -p 8080:8080 incplusplus/spring-boot-websocket-chat-demo-amd64:latest)
+          - echo "Container ID" $container_id
+
+          script:
+          - ./.travis/test_actuator.sh $container_id localhost 8080 /actuator/health
+
+          after_script:
+            - docker stop spring-boot-websocket-chat-demo
+
+        -
+          ### armhf Docker images
+          name: "Test armhf Docker image"
+          install:
+            - ./.travis/configure_docker.sh
+            - export DOCKER_CLI_EXPERIMENTAL=enabled #enable experimental features
+
+          before_script:
+            - ls docker_cached
+            - docker load --input docker_cached/spring-boot-websocket-chat-demo-armhf.tar
+            - IP=$(ip route get 8.8.8.8 | awk -F"src " 'NR==1{split($2,a," ");print a[1]}')
+            - container_id=$(docker run -d -p 8080:8080 incplusplus/spring-boot-websocket-chat-demo-armhf:latest)
+            - echo "Container ID" $container_id
+
+          script:
+            - ./.travis/test_actuator.sh $container_id localhost 8080 /actuator/health
+
+          after_script:
+            - docker stop spring-boot-websocket-chat-demo
+        -
+          ### arm64 Docker images
+          name: "Test arm64 Docker image"
+          install:
+            - ./.travis/configure_docker.sh
+            - export DOCKER_CLI_EXPERIMENTAL=enabled #enable experimental features
+
+          before_script:
+            - ls docker_cached
+            - docker load --input docker_cached/spring-boot-websocket-chat-demo-arm64.tar
+            - IP=$(ip route get 8.8.8.8 | awk -F"src " 'NR==1{split($2,a," ");print a[1]}')
+            - container_id=$(docker run -d -p 8080:8080 incplusplus/spring-boot-websocket-chat-demo-arm64:latest)
+            - echo "Container ID" $container_id
+
+          script:
+            - ./.travis/test_actuator.sh $container_id localhost 8080 /actuator/health
+
+          after_script:
+            - docker stop spring-boot-websocket-chat-demo
           
         - stage: release
 
