@@ -80,10 +80,10 @@ jobs:
           - ls docker_cached
           - docker load --input docker_cached/spring-boot-websocket-chat-demo-amd64.tar
           - IP=$(ip route get 8.8.8.8 | awk -F"src " 'NR==1{split($2,a," ");print a[1]}')
-          - docker run -d -p 8080:8080 --name spring-boot-websocket-chat-demo incplusplus/spring-boot-websocket-chat-demo-amd64:latest
+          - container_id=$(docker run -d -p 8080:8080 --name spring-boot-websocket-chat-demo incplusplus/spring-boot-websocket-chat-demo-amd64:latest)
 
           script:
-          - ./.travis/test_actuator.sh spring-boot-websocket-chat-demo localhost 8080 /actuator/health
+          - ./.travis/test_actuator.sh $container_id localhost 8080 /actuator/health
 
           after_script:
             - docker stop spring-boot-websocket-chat-demo
@@ -99,10 +99,10 @@ jobs:
             - ls docker_cached
             - docker load --input docker_cached/spring-boot-websocket-chat-demo-armhf.tar
             - IP=$(ip route get 8.8.8.8 | awk -F"src " 'NR==1{split($2,a," ");print a[1]}')
-            - docker run -d -p 8080:8080 --name spring-boot-websocket-chat-demo incplusplus/spring-boot-websocket-chat-demo-armhf:latest
+            - container_id=$(docker run -d -p 8080:8080 --name spring-boot-websocket-chat-demo incplusplus/spring-boot-websocket-chat-demo-armhf:latest)
 
           script:
-            - ./.travis/test_actuator.sh spring-boot-websocket-chat-demo localhost 8080 /actuator/health
+            - ./.travis/test_actuator.sh $container_id localhost 8080 /actuator/health
 
           after_script:
             - docker stop spring-boot-websocket-chat-demo
@@ -117,10 +117,10 @@ jobs:
             - ls docker_cached
             - docker load --input docker_cached/spring-boot-websocket-chat-demo-arm64.tar
             - IP=$(ip route get 8.8.8.8 | awk -F"src " 'NR==1{split($2,a," ");print a[1]}')
-            - docker run -d -p 8080:8080 --name spring-boot-websocket-chat-demo incplusplus/spring-boot-websocket-chat-demo-arm64:latest
+            - container_id=$(docker run -d -p 8080:8080 --name spring-boot-websocket-chat-demo incplusplus/spring-boot-websocket-chat-demo-arm64:latest)
 
           script:
-            - ./.travis/test_actuator.sh spring-boot-websocket-chat-demo localhost 8080 /actuator/health
+            - ./.travis/test_actuator.sh $container_id localhost 8080 /actuator/health
 
           after_script:
             - docker stop spring-boot-websocket-chat-demo
