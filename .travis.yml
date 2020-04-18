@@ -27,7 +27,7 @@ before_install:
 jobs:
   include:
         - stage: building
-          name: "Build x86 Docker images"
+          name: "Build x86 Docker image"
           ### x86 Docker images
 
           before_script:
@@ -42,7 +42,7 @@ jobs:
 
         - 
           ### armhf Docker images
-          name: "Build armhf Docker images"
+          name: "Build armhf Docker image"
           before_script:
           - sudo apt-get --yes --no-install-recommends install binfmt-support qemu-user-static
           - ./.travis/configure_docker.sh #upgrading docker and installing packages for arm architecture
@@ -56,7 +56,7 @@ jobs:
 
         -
           ### arm64 Docker images
-          name: "Build arm64 Docker images"
+          name: "Build arm64 Docker image"
           before_script:
           - sudo apt-get --yes --no-install-recommends install binfmt-support qemu-user-static
           - ./.travis/configure_docker.sh #upgrading docker and installing packages for arm architecture
@@ -71,6 +71,7 @@ jobs:
         - stage: testing
 
           ### x86 Docker images
+          name: "Test amd64 Docker image"
           install:
           - ./.travis/configure_docker.sh
           - export DOCKER_CLI_EXPERIMENTAL=enabled #enable experimental features
@@ -89,6 +90,7 @@ jobs:
 
         -
           ### armhf Docker images
+          name: "Test armhf Docker image"
           install:
             - ./.travis/configure_docker.sh
             - export DOCKER_CLI_EXPERIMENTAL=enabled #enable experimental features
@@ -106,6 +108,7 @@ jobs:
             - docker stop spring-boot-websocket-chat-demo
         -
           ### arm64 Docker images
+          name: "Test arm64 Docker image"
           install:
             - ./.travis/configure_docker.sh
             - export DOCKER_CLI_EXPERIMENTAL=enabled #enable experimental features
