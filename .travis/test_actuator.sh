@@ -7,9 +7,9 @@ host=$2
 port=$3
 url=$4
 endpoint_up=false
-ready_regex="\w+ started on port\(s\):.*with context path.*"
+ready_regex=".*\w+ started on port\(s\):.*with context path.*"
 server_wait_sleep_time_s=10
-grep_cmd="docker logs $container_id | grep -Ex $ready_regex"
+grep_cmd="docker logs $container_id | grep -Ex \"$ready_regex\""
 desired_actuator_status="{\"status\":\"UP\"}"
 
 check_actuator_status() {
