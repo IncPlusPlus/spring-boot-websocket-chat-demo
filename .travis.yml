@@ -81,6 +81,7 @@ jobs:
           - docker load --input docker_cached/spring-boot-websocket-chat-demo-amd64.tar
           - IP=$(ip route get 8.8.8.8 | awk -F"src " 'NR==1{split($2,a," ");print a[1]}')
           - container_id=$(docker run -d -p 8080:8080 --name spring-boot-websocket-chat-demo incplusplus/spring-boot-websocket-chat-demo-amd64:latest)
+          - echo "Container ID" $container_id
 
           script:
           - ./.travis/test_actuator.sh $container_id localhost 8080 /actuator/health
@@ -100,6 +101,7 @@ jobs:
             - docker load --input docker_cached/spring-boot-websocket-chat-demo-armhf.tar
             - IP=$(ip route get 8.8.8.8 | awk -F"src " 'NR==1{split($2,a," ");print a[1]}')
             - container_id=$(docker run -d -p 8080:8080 --name spring-boot-websocket-chat-demo incplusplus/spring-boot-websocket-chat-demo-armhf:latest)
+            - echo "Container ID" $container_id
 
           script:
             - ./.travis/test_actuator.sh $container_id localhost 8080 /actuator/health
@@ -118,6 +120,7 @@ jobs:
             - docker load --input docker_cached/spring-boot-websocket-chat-demo-arm64.tar
             - IP=$(ip route get 8.8.8.8 | awk -F"src " 'NR==1{split($2,a," ");print a[1]}')
             - container_id=$(docker run -d -p 8080:8080 --name spring-boot-websocket-chat-demo incplusplus/spring-boot-websocket-chat-demo-arm64:latest)
+            - echo "Container ID" $container_id
 
           script:
             - ./.travis/test_actuator.sh $container_id localhost 8080 /actuator/health

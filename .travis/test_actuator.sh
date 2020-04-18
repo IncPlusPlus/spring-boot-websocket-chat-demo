@@ -40,7 +40,10 @@ while [[ "$endpoint_up" == false ]]; do
     ;;
   1)
     if [[ "$time_waited" -gt $((server_wait_sleep_time_s * max_wait_time)) ]]; then
-      echo Timed out while waiting for server to start. Printing log from server
+      echo Timed out while waiting for server to start.
+      echo Docker containers:
+      docker ps
+      echo Printing log from server
       docker logs "$container_id"
       exit 1
     else
