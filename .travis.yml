@@ -27,7 +27,7 @@ before_install:
 jobs:
   include:
         - stage: building
-          name: "Build x86 Docker image"
+          name: "Build amd64 Docker image"
           ### x86 Docker images
 
           before_script:
