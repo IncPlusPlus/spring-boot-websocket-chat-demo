@@ -16,7 +16,7 @@ time_waited=0
 
 check_file_status() {
   echo Things look okay. ls output:
-  ls $dir
+  ls "$dir"
   exit 0
 }
 
