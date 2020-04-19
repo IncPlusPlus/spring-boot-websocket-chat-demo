@@ -120,7 +120,7 @@ jobs:
 #            - docker stop spring-boot-websocket-chat-demo
           
         - stage: release
-#          if: "branch = master AND tag IS present"
+          if: "tag IS present"
           install:
           - ./.travis/configure_docker.sh
           - export DOCKER_CLI_EXPERIMENTAL=enabled #enable experimental features 
