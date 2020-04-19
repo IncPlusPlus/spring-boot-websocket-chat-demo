@@ -28,7 +28,7 @@ jobs:
   include:
         - stage: building
           name: "Build amd64 Docker image"
-          ### x86 Docker images
+          ### amd64 Docker images
 
           before_script:
           - ./.travis/configure_docker.sh #upgrading docker
@@ -73,7 +73,7 @@ jobs:
 
 #        - stage: testing
 #
-#          ### x86 Docker images
+#          ### amd64 Docker images
 #          name: "Test amd64 Docker image"
 #          install:
 #          - ./.travis/configure_docker.sh
@@ -151,9 +151,9 @@ jobs:
           script:
           - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
 
-          ### x86 Docker images
-          - docker tag $DOCKER_USERNAME/spring-boot-websocket-chat-demo-amd64:latest $DOCKER_USERNAME/spring-boot-websocket-chat-demo-x86:"${version}"
-#          - docker push $DOCKER_USERNAME/spring-boot-websocket-chat-demo-x86:"${version}"
+          ### amd64 Docker images
+          - docker tag $DOCKER_USERNAME/spring-boot-websocket-chat-demo-amd64:latest $DOCKER_USERNAME/spring-boot-websocket-chat-demo-amd64:"${version}"
+#          - docker push $DOCKER_USERNAME/spring-boot-websocket-chat-demo-amd64:"${version}"
 
           ### armhf Docker images
           - docker tag $DOCKER_USERNAME/spring-boot-websocket-chat-demo-armhf:latest $DOCKER_USERNAME/spring-boot-websocket-chat-demo-armhf:"${version}"
@@ -165,8 +165,8 @@ jobs:
 
           # Manifest
 
-          - docker manifest create --amend $DOCKER_USERNAME/spring-boot-websocket-chat-demo $DOCKER_USERNAME/spring-boot-websocket-chat-demo-x86:"${version}" $DOCKER_USERNAME/spring-boot-websocket-chat-demo-armhf:"${version}" $DOCKER_USERNAME/spring-boot-websocket-chat-demo-arm64:"${version}"
-          - docker manifest annotate $DOCKER_USERNAME/spring-boot-websocket-chat-demo $DOCKER_USERNAME/spring-boot-websocket-chat-demo-x86:"${version}" --os linux --arch amd64
+          - docker manifest create --amend $DOCKER_USERNAME/spring-boot-websocket-chat-demo $DOCKER_USERNAME/spring-boot-websocket-chat-demo-amd64:"${version}" $DOCKER_USERNAME/spring-boot-websocket-chat-demo-armhf:"${version}" $DOCKER_USERNAME/spring-boot-websocket-chat-demo-arm64:"${version}"
+          - docker manifest annotate $DOCKER_USERNAME/spring-boot-websocket-chat-demo $DOCKER_USERNAME/spring-boot-websocket-chat-demo-amd64:"${version}" --os linux --arch amd64
           - docker manifest annotate $DOCKER_USERNAME/spring-boot-websocket-chat-demo $DOCKER_USERNAME/spring-boot-websocket-chat-demo-armhf:"${version}" --os linux --arch arm
           - docker manifest annotate $DOCKER_USERNAME/spring-boot-websocket-chat-demo $DOCKER_USERNAME/spring-boot-websocket-chat-demo-arm64:"${version}" --os linux --arch arm64
 
