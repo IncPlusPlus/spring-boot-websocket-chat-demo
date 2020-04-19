@@ -39,7 +39,7 @@ jobs:
           script:
           - echo BUILDING AMD64
           - while sleep 9m; do echo "=====[ $SECONDS seconds, build-docker still building... ]====="; done &
-          - docker buildx build . -t incplusplus/spring-boot-websocket-chat-demo:amd64-latest -t incplusplus/spring-boot-websocket-chat-demo:amd64-"${version}" --platform linux/amd64 > output
+          - docker buildx build --progress=plain . -t incplusplus/spring-boot-websocket-chat-demo:amd64-latest -t incplusplus/spring-boot-websocket-chat-demo:amd64-"${version}" --platform linux/amd64 > output
           - docker save --output docker_cached/spring-boot-websocket-chat-demo-amd64.tar incplusplus/spring-boot-websocket-chat-demo:amd64-latest
           - docker image ls
           - ./.travis/wait_for_file_in_dir.sh amd64 docker_cached
@@ -47,14 +47,14 @@ jobs:
 
           - echo BUILDING ARMHF
           - while sleep 9m; do echo "=====[ $SECONDS seconds, build-docker still building... ]====="; done &
-          - docker buildx build . -t incplusplus/spring-boot-websocket-chat-demo:armhf-latest -t incplusplus/spring-boot-websocket-chat-demo:armhf-"${version}" --platform linux/armhf > output
+          - docker buildx build --progress=plain . -t incplusplus/spring-boot-websocket-chat-demo:armhf-latest -t incplusplus/spring-boot-websocket-chat-demo:armhf-"${version}" --platform linux/armhf > output
           - docker save --output docker_cached/spring-boot-websocket-chat-demo-armhf.tar incplusplus/spring-boot-websocket-chat-demo:armhf-latest
           - docker image ls
           - ./.travis/wait_for_file_in_dir.sh armhf docker_cached
 
           - echo BUILDING ARM64
           - while sleep 9m; do echo "=====[ $SECONDS seconds, build-docker still building... ]====="; done &
-          - docker buildx build . -t incplusplus/spring-boot-websocket-chat-demo:arm64-latest -t incplusplus/spring-boot-websocket-chat-demo:arm64-"${version}" --platform linux/arm64 > output
+          - docker buildx build --progress=plain . -t incplusplus/spring-boot-websocket-chat-demo:arm64-latest -t incplusplus/spring-boot-websocket-chat-demo:arm64-"${version}" --platform linux/arm64 > output
           - docker save --output docker_cached/spring-boot-websocket-chat-demo-arm64.tar incplusplus/spring-boot-websocket-chat-demo:arm64-latest
           - docker image ls
           - ./.travis/wait_for_file_in_dir.sh arm64 docker_cached
