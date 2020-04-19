@@ -16,7 +16,7 @@ spec:
     spec:                     # Spec for the containers that will be run in the Pods
       containers:
       - name: chat-server
-        image: incplusplus/spring-boot-websocket-chat-demo:0.0.1-SNAPSHOT
+        image: incplusplus/spring-boot-websocket-chat-demo
         imagePullPolicy: IfNotPresent
 ---
 apiVersion: v1
