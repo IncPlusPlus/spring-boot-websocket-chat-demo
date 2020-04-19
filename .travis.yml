@@ -183,6 +183,7 @@ jobs:
           - docker manifest annotate $DOCKER_USERNAME/spring-boot-websocket-chat-demo $DOCKER_USERNAME/spring-boot-websocket-chat-demo:amd64-latest --os linux --arch amd64
           - docker manifest annotate $DOCKER_USERNAME/spring-boot-websocket-chat-demo $DOCKER_USERNAME/spring-boot-websocket-chat-demo:armhf-latest --os linux --arch arm
           - docker manifest annotate $DOCKER_USERNAME/spring-boot-websocket-chat-demo $DOCKER_USERNAME/spring-boot-websocket-chat-demo:arm64-latest --os linux --arch arm64
+          - docker manifest push $DOCKER_USERNAME/spring-boot-websocket-chat-demo
 
 env:
   global:
