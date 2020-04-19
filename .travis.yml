@@ -139,7 +139,7 @@ jobs:
           - echo ${version}
 
           script:
-          - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+          - echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
           - echo Building images. Listing pre-existing images
           - docker image ls
           - echo Pushing all tags for $DOCKER_USERNAME/spring-boot-websocket-chat-demo
