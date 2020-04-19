@@ -150,6 +150,8 @@ jobs:
 
           script:
           - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+          - echo Building images. Listing pre-existing images
+          - docker image ls
 
           ### amd64 Docker images
           - docker tag $DOCKER_USERNAME/spring-boot-websocket-chat-demo:amd64-latest $DOCKER_USERNAME/spring-boot-websocket-chat-demo:amd64-"${version}"
