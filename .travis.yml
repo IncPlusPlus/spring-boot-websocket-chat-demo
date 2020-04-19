@@ -118,13 +118,13 @@ jobs:
 #
 #          after_script:
 #            - docker stop spring-boot-websocket-chat-demo
-          
+
         - stage: release
           if: "tag IS present"
           install:
           - ./.travis/configure_docker.sh
-          - export DOCKER_CLI_EXPERIMENTAL=enabled #enable experimental features 
- 
+          - export DOCKER_CLI_EXPERIMENTAL=enabled #enable experimental features
+
           before_script:
           - ls docker_cached
           - docker image ls
@@ -170,6 +170,9 @@ jobs:
 env:
   global:
     - DOCKER_USERNAME="incplusplus"
+    - secure: "Pbj2E83MFXKVqQtPXj/Tp1uHPpSDt+fH/tAcTJcAr/D7Wl1wBgDLVifw7crE0fylc5ZPbr6OEHjWZ0nzgaclVt6DjiJZCGwslWmqynmp9/Psd1zbyiNQgM8bs8MoEkHRAhu5cTzGNP0VgMWw+PWEbRKcMzXt827bWDRyjzXx8AarUvnbjZTnKlwh4R2nZ4MaiuV/Ywx/Udahf8BXIN46y8c8LbaC4/GEkhN1yuM6Di+9LyT36stVLs5RLHFb0t
+              Nh78SLM+k40zVtdrr5d5MW5FXgy+z40RalbFcHK3qrtsMQlYnIiJePsDBAQyfuiweT6g5ardgvj9sQlZnDXa0U2WUm9larcXWJGE6deoo60PEgh5fh19Uik4Y+kUr/bVLyEGH2HvHG0D4napKfKXcZmwAM+QrLqV2hVPGanLp+w3zZZ61AlVn7UOfFRoF1ursqQnbUqymYK11sJUSs4rT++hdsHqorioj2nWyRKIG4XT2MfZHCx2B++YTttn3LdlvkhE5/gz3
+              D93CDSfM4L5VUQn66dKUt4BSmEOD4bAIj7RkWwVcjt+aFpvcAGJL+JVMwdGfwlG9KJXJG6XjN9EYwmapeiKGPj9GlFBmgZgN1ac2pd1kNeiQClaWliZUj7ia9OypmwjxAvRmjUZE9hHAyJFRSHIm/SegvPO5OidRsg+s="
 
 notifications:
   email: false
