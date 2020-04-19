@@ -148,6 +148,7 @@ jobs:
  
           before_script:
           - ls docker_cached
+          - docker image ls
           - docker load --input docker_cached/spring-boot-websocket-chat-demo-amd64.tar
 
           - docker load --input docker_cached/spring-boot-websocket-chat-demo-armhf.tar
