@@ -60,7 +60,7 @@ jobs:
           - docker buildx build . -t incplusplus/spring-boot-websocket-chat-demo:armhf-latest --platform armhf > output
           - docker save --output docker_cached/spring-boot-websocket-chat-demo-armhf.tar incplusplus/spring-boot-websocket-chat-demo:armhf-latest
           - docker image ls
-          - ./.travis/wait_for_file_in_dir.sh amd64 docker_cached
+          - ./.travis/wait_for_file_in_dir.sh armhf docker_cached
 
         -
           ### arm64 Docker images
@@ -78,7 +78,7 @@ jobs:
           - docker buildx build . -t incplusplus/spring-boot-websocket-chat-demo:arm64-latest --platform linux/arm64 > output
           - docker save --output docker_cached/spring-boot-websocket-chat-demo-arm64.tar incplusplus/spring-boot-websocket-chat-demo:arm64-latest
           - docker image ls
-          - ./.travis/wait_for_file_in_dir.sh amd64 docker_cached
+          - ./.travis/wait_for_file_in_dir.sh arm64 docker_cached
 
 #        - stage: testing
 #
