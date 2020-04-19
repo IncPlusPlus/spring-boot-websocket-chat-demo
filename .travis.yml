@@ -154,6 +154,8 @@ jobs:
           - docker manifest annotate $DOCKER_USERNAME/spring-boot-websocket-chat-demo $DOCKER_USERNAME/spring-boot-websocket-chat-demo:armhf-latest --os linux --arch arm
           - docker manifest annotate $DOCKER_USERNAME/spring-boot-websocket-chat-demo $DOCKER_USERNAME/spring-boot-websocket-chat-demo:arm64-latest --os linux --arch arm64
           - docker manifest push $DOCKER_USERNAME/spring-boot-websocket-chat-demo
+          - echo Successfully pushed latest multi-arch manifest. Printing manifest contents
+          - docker manifest inspect incplusplus/spring-boot-websocket-chat-demo
 
           # This Version's Manifest
           - echo Creating and pushing multi-arch manifest for tag "${version}". Printing existing images
@@ -163,6 +165,8 @@ jobs:
           - docker manifest annotate $DOCKER_USERNAME/spring-boot-websocket-chat-demo:"${version}" $DOCKER_USERNAME/spring-boot-websocket-chat-demo:armhf-"${version}" --os linux --arch arm
           - docker manifest annotate $DOCKER_USERNAME/spring-boot-websocket-chat-demo:"${version}" $DOCKER_USERNAME/spring-boot-websocket-chat-demo:arm64-"${version}" --os linux --arch arm64
           - docker manifest push $DOCKER_USERNAME/spring-boot-websocket-chat-demo:"${version}"
+          - echo Successfully pushed "${version}" multi-arch manifest. Printing manifest contents
+          - docker manifest inspect incplusplus/spring-boot-websocket-chat-demo:"${version}"
 
           - echo Build complete. Listing images.
           - docker image ls
