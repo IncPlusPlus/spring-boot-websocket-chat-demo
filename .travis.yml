@@ -164,7 +164,8 @@ jobs:
 #          - docker push $DOCKER_USERNAME/spring-boot-websocket-chat-demo-arm64:"${version}"
 
           # Manifest
-
+          - echo Creating and pushing multi-arch manifest. Printing existing images
+          - docker image ls
           - docker manifest create --amend $DOCKER_USERNAME/spring-boot-websocket-chat-demo $DOCKER_USERNAME/spring-boot-websocket-chat-demo-amd64:latest $DOCKER_USERNAME/spring-boot-websocket-chat-demo-armhf:latest $DOCKER_USERNAME/spring-boot-websocket-chat-demo-arm64:latest
           - docker manifest annotate $DOCKER_USERNAME/spring-boot-websocket-chat-demo $DOCKER_USERNAME/spring-boot-websocket-chat-demo-amd64:latest --os linux --arch amd64
           - docker manifest annotate $DOCKER_USERNAME/spring-boot-websocket-chat-demo $DOCKER_USERNAME/spring-boot-websocket-chat-demo-armhf:latest --os linux --arch arm
