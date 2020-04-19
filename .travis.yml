@@ -153,15 +153,15 @@ jobs:
 
           ### amd64 Docker images
           - docker tag $DOCKER_USERNAME/spring-boot-websocket-chat-demo-amd64:latest $DOCKER_USERNAME/spring-boot-websocket-chat-demo-amd64:"${version}"
-#          - docker push $DOCKER_USERNAME/spring-boot-websocket-chat-demo-amd64:"${version}"
+          - docker push $DOCKER_USERNAME/spring-boot-websocket-chat-demo-amd64:"${version}"
 
           ### armhf Docker images
           - docker tag $DOCKER_USERNAME/spring-boot-websocket-chat-demo-armhf:latest $DOCKER_USERNAME/spring-boot-websocket-chat-demo-armhf:"${version}"
-#          - docker push $DOCKER_USERNAME/spring-boot-websocket-chat-demo-armhf:"${version}"
+          - docker push $DOCKER_USERNAME/spring-boot-websocket-chat-demo-armhf:"${version}"
 
           ### arm64v8 Docker images
           - docker tag $DOCKER_USERNAME/spring-boot-websocket-chat-demo-arm64:latest $DOCKER_USERNAME/spring-boot-websocket-chat-demo-arm64:"${version}"
-#          - docker push $DOCKER_USERNAME/spring-boot-websocket-chat-demo-arm64:"${version}"
+          - docker push $DOCKER_USERNAME/spring-boot-websocket-chat-demo-arm64:"${version}"
 
           # Manifest
           - echo Creating and pushing multi-arch manifest. Printing existing images
