@@ -37,7 +37,7 @@ jobs:
 
           script:
           - while sleep 9m; do echo "=====[ $SECONDS seconds, build-docker still building... ]====="; done &
-          - docker buildx build . -t incplusplus/spring-boot-websocket-chat-demo:amd64-latest --platform amd64 > output
+          - docker buildx build . -t incplusplus/spring-boot-websocket-chat-demo:amd64-latest --platform linux/amd64 > output
           - docker save --output docker_cached/spring-boot-websocket-chat-demo-amd64.tar incplusplus/spring-boot-websocket-chat-demo:amd64-latest
           - docker image ls
           - ./.travis/wait_for_file_in_dir.sh amd64 docker_cached
@@ -55,7 +55,7 @@ jobs:
 
           script: 
           - while sleep 9m; do echo "=====[ $SECONDS seconds, build-docker still building... ]====="; done &
-          - docker buildx build . -t incplusplus/spring-boot-websocket-chat-demo:armhf-latest --platform armhf > output
+          - docker buildx build . -t incplusplus/spring-boot-websocket-chat-demo:armhf-latest --platform linux/armhf > output
           - docker save --output docker_cached/spring-boot-websocket-chat-demo-armhf.tar incplusplus/spring-boot-websocket-chat-demo:armhf-latest
           - docker image ls
           - ./.travis/wait_for_file_in_dir.sh armhf docker_cached
