@@ -38,8 +38,8 @@ jobs:
 
           script:
           - while sleep 9m; do echo "=====[ $SECONDS seconds, build-docker still building... ]====="; done &
-          - docker buildx build . -t incplusplus/spring-boot-websocket-chat-demo-amd64:latest --platform amd64 > output
-          - docker save --output docker_cached/spring-boot-websocket-chat-demo-amd64.tar incplusplus/spring-boot-websocket-chat-demo-amd64:latest
+          - docker buildx build . -t incplusplus/spring-boot-websocket-chat-demo:amd64-latest --platform amd64 > output
+          - docker save --output docker_cached/spring-boot-websocket-chat-demo-amd64.tar incplusplus/spring-boot-websocket-chat-demo:amd64-latest
 
         - 
           ### armhf Docker images
@@ -53,8 +53,8 @@ jobs:
 
           script: 
           - while sleep 9m; do echo "=====[ $SECONDS seconds, build-docker still building... ]====="; done &
-          - docker buildx build . -t incplusplus/spring-boot-websocket-chat-demo-armhf:latest --platform armhf > output
-          - docker save --output docker_cached/spring-boot-websocket-chat-demo-armhf.tar incplusplus/spring-boot-websocket-chat-demo-armhf:latest
+          - docker buildx build . -t incplusplus/spring-boot-websocket-chat-demo:armhf-latest --platform armhf > output
+          - docker save --output docker_cached/spring-boot-websocket-chat-demo-armhf.tar incplusplus/spring-boot-websocket-chat-demo:armhf-latest
 
         -
           ### arm64 Docker images
@@ -68,8 +68,8 @@ jobs:
 
           script:
           - while sleep 9m; do echo "=====[ $SECONDS seconds, build-docker still building... ]====="; done &
-          - docker buildx build . -t incplusplus/spring-boot-websocket-chat-demo-arm64:latest --platform linux/arm64 > output
-          - docker save --output docker_cached/spring-boot-websocket-chat-demo-arm64.tar incplusplus/spring-boot-websocket-chat-demo-arm64:latest
+          - docker buildx build . -t incplusplus/spring-boot-websocket-chat-demo:arm64-latest --platform linux/arm64 > output
+          - docker save --output docker_cached/spring-boot-websocket-chat-demo-arm64.tar incplusplus/spring-boot-websocket-chat-demo:arm64-latest
 
 #        - stage: testing
 #
@@ -83,7 +83,7 @@ jobs:
 #          - ls docker_cached
 #          - docker load --input docker_cached/spring-boot-websocket-chat-demo-amd64.tar
 #          - IP=$(ip route get 8.8.8.8 | awk -F"src " 'NR==1{split($2,a," ");print a[1]}')
-#          - container_id=$(docker run -d -p 8080:8080 incplusplus/spring-boot-websocket-chat-demo-amd64:latest)
+#          - container_id=$(docker run -d -p 8080:8080 incplusplus/spring-boot-websocket-chat-demo:amd64-latest)
 #          - echo "Container ID" $container_id
 #
 #          script:
@@ -103,7 +103,7 @@ jobs:
 #            - ls docker_cached
 #            - docker load --input docker_cached/spring-boot-websocket-chat-demo-armhf.tar
 #            - IP=$(ip route get 8.8.8.8 | awk -F"src " 'NR==1{split($2,a," ");print a[1]}')
-#            - container_id=$(docker run -d -p 8080:8080 incplusplus/spring-boot-websocket-chat-demo-armhf:latest)
+#            - container_id=$(docker run -d -p 8080:8080 incplusplus/spring-boot-websocket-chat-demo:armhf-latest)
 #            - echo "Container ID" $container_id
 #
 #          script:
@@ -122,7 +122,7 @@ jobs:
 #            - ls docker_cached
 #            - docker load --input docker_cached/spring-boot-websocket-chat-demo-arm64.tar
 #            - IP=$(ip route get 8.8.8.8 | awk -F"src " 'NR==1{split($2,a," ");print a[1]}')
-#            - container_id=$(docker run -d -p 8080:8080 incplusplus/spring-boot-websocket-chat-demo-arm64:latest)
+#            - container_id=$(docker run -d -p 8080:8080 incplusplus/spring-boot-websocket-chat-demo:arm64-latest)
 #            - echo "Container ID" $container_id
 #
 #          script:
@@ -152,24 +152,24 @@ jobs:
           - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
 
           ### amd64 Docker images
-          - docker tag $DOCKER_USERNAME/spring-boot-websocket-chat-demo-amd64:latest $DOCKER_USERNAME/spring-boot-websocket-chat-demo-amd64:"${version}"
-          - docker push $DOCKER_USERNAME/spring-boot-websocket-chat-demo-amd64:"${version}"
+          - docker tag $DOCKER_USERNAME/spring-boot-websocket-chat-demo:amd64-latest $DOCKER_USERNAME/spring-boot-websocket-chat-demo:amd64-"${version}"
+          - docker push $DOCKER_USERNAME/spring-boot-websocket-chat-demo:amd64-"${version}"
 
           ### armhf Docker images
-          - docker tag $DOCKER_USERNAME/spring-boot-websocket-chat-demo-armhf:latest $DOCKER_USERNAME/spring-boot-websocket-chat-demo-armhf:"${version}"
-          - docker push $DOCKER_USERNAME/spring-boot-websocket-chat-demo-armhf:"${version}"
+          - docker tag $DOCKER_USERNAME/spring-boot-websocket-chat-demo:armhf-latest $DOCKER_USERNAME/spring-boot-websocket-chat-demo:armhf-"${version}"
+          - docker push $DOCKER_USERNAME/spring-boot-websocket-chat-demo:armhf-"${version}"
 
           ### arm64v8 Docker images
-          - docker tag $DOCKER_USERNAME/spring-boot-websocket-chat-demo-arm64:latest $DOCKER_USERNAME/spring-boot-websocket-chat-demo-arm64:"${version}"
-          - docker push $DOCKER_USERNAME/spring-boot-websocket-chat-demo-arm64:"${version}"
+          - docker tag $DOCKER_USERNAME/spring-boot-websocket-chat-demo:arm64-latest $DOCKER_USERNAME/spring-boot-websocket-chat-demo:arm64-"${version}"
+          - docker push $DOCKER_USERNAME/spring-boot-websocket-chat-demo:arm64-"${version}"
 
           # Manifest
           - echo Creating and pushing multi-arch manifest. Printing existing images
           - docker image ls
-          - docker manifest create --amend $DOCKER_USERNAME/spring-boot-websocket-chat-demo $DOCKER_USERNAME/spring-boot-websocket-chat-demo-amd64:"${version}" $DOCKER_USERNAME/spring-boot-websocket-chat-demo-armhf:"${version}" $DOCKER_USERNAME/spring-boot-websocket-chat-demo-arm64:"${version}"
-          - docker manifest annotate $DOCKER_USERNAME/spring-boot-websocket-chat-demo $DOCKER_USERNAME/spring-boot-websocket-chat-demo-amd64:"${version}" --os linux --arch amd64
-          - docker manifest annotate $DOCKER_USERNAME/spring-boot-websocket-chat-demo $DOCKER_USERNAME/spring-boot-websocket-chat-demo-armhf:"${version}" --os linux --arch arm
-          - docker manifest annotate $DOCKER_USERNAME/spring-boot-websocket-chat-demo $DOCKER_USERNAME/spring-boot-websocket-chat-demo-arm64:"${version}" --os linux --arch arm64
+          - docker manifest create --amend $DOCKER_USERNAME/spring-boot-websocket-chat-demo $DOCKER_USERNAME/spring-boot-websocket-chat-demo:amd64-"${version}" $DOCKER_USERNAME/spring-boot-websocket-chat-demo:armhf-"${version}" $DOCKER_USERNAME/spring-boot-websocket-chat-demo:arm64-"${version}"
+          - docker manifest annotate $DOCKER_USERNAME/spring-boot-websocket-chat-demo $DOCKER_USERNAME/spring-boot-websocket-chat-demo:amd64-"${version}" --os linux --arch amd64
+          - docker manifest annotate $DOCKER_USERNAME/spring-boot-websocket-chat-demo $DOCKER_USERNAME/spring-boot-websocket-chat-demo:armhf-"${version}" --os linux --arch arm
+          - docker manifest annotate $DOCKER_USERNAME/spring-boot-websocket-chat-demo $DOCKER_USERNAME/spring-boot-websocket-chat-demo:arm64-"${version}" --os linux --arch arm64
 
 env:
   global:
